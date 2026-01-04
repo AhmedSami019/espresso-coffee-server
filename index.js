@@ -29,11 +29,12 @@ async function run() {
       .db("espresso-coffee-store")
       .collection("coffees");
 
+    // users collection
     const usersCollection = client
       .db("espresso-coffee-store")
       .collection("users");
 
-    // all get method
+    // all get method of coffees
     app.get("/coffees", async (req, res) => {
       const result = await coffeeCollection.find().toArray();
       res.send(result);
@@ -46,20 +47,13 @@ async function run() {
       res.send(result);
     });
 
-    // all post method
+    // all post method of coffees
     app.post("/coffees", async (req, res) => {
       const newCoffee = req.body;
       //   console.log(newCoffee);
       const result = await coffeeCollection.insertOne(newCoffee);
       res.send(result);
     });
-
-    app.post('/users', async(req, res)=>{
-      const userProfile = req.body
-      console.log(userProfile);
-      const result = await usersCollection.insertOne(userProfile)
-      res.send(result)
-    })
 
     // all update method
     app.put("/coffees/:id", async (req, res) => {
@@ -79,6 +73,19 @@ async function run() {
       // console.log(id);
       const query = { _id: new ObjectId(id) };
       const result = await coffeeCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // all crud operation for users
+    app.get("/users", async(req, res)=>{
+      const result = await usersCollection.find().toArray()
+      res.send(result)
+    })
+
+    app.post("/users", async (req, res) => {
+      const userProfile = req.body;
+      console.log(userProfile);
+      const result = await usersCollection.insertOne(userProfile);
       res.send(result);
     });
 
