@@ -29,6 +29,10 @@ async function run() {
       .db("espresso-coffee-store")
       .collection("coffees");
 
+    const usersCollection = client
+      .db("espresso-coffee-store")
+      .collection("users");
+
     // all get method
     app.get("/coffees", async (req, res) => {
       const result = await coffeeCollection.find().toArray();
@@ -50,13 +54,20 @@ async function run() {
       res.send(result);
     });
 
+    app.post('/users', async(req, res)=>{
+      const userProfile = req.body
+      console.log(userProfile);
+      const result = await usersCollection.insertOne(userProfile)
+      res.send(result)
+    })
+
     // all update method
     app.put("/coffees/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const updatedCoffee = req.body;
       const updateDoc = {
-        $set: updatedCoffee
+        $set: updatedCoffee,
       };
       const result = await coffeeCollection.updateOne(filter, updateDoc);
       res.send(result);
